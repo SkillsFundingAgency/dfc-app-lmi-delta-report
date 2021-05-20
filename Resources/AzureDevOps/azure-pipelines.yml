@@ -101,3 +101,53 @@ stages:
       EnvironmentName: Sit_AppLmiDeltaReport
       AppSharedResourceGroup: $(AppSharedResourceGroup)
       AppServiceName: '$(AppServiceName)'
+
+- stage: DeployToPP
+  condition: and(eq(dependencies.Build.result,'Succeeded'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  displayName: Deploy to PP
+  variables:
+  - group: dfc-shared-all
+  - group: dfc-shared-pp
+  - group: dfc-app-shared-all
+  - group: dfc-app-shared-pp
+  - template: VariableTemplates\PPEnvironmentVariables.yml
+
+  jobs:
+  - template: JobTemplates/deploy-environment.yml
+    parameters:
+      AzureSubscription: 'SFA-DIG-PreProd (931bc9f6-359c-4f65-a753-1ee191a1fd6c)'
+      EnvironmentTag: '$(EnvironmentTag)'
+      ParentBusiness: '$(ParentBusiness)'
+      ServiceOffering: '$(ServiceOffering)'
+      ResourceGroup: $(ResourceGroup)
+      DfCDevopsPath: '$(Agent.BuildDirectory)/s/dfc-devops'
+      PackageFile:  "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.DeploymentPackages/${{ variables.SolutionBaseName }}.zip"
+      ArmTemplateFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Resources.ArmTemplates/"
+      EnvironmentName: PP_AppLmiDeltaReport
+      AppSharedResourceGroup: $(AppSharedResourceGroup)
+      AppServiceName: '$(AppServiceName)'
+
+- stage: DeployToPrd
+  condition: and(eq(dependencies.DeployToPP.result,'Succeeded'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  displayName: Deploy to Prd
+  variables:
+  - group: dfc-shared-all
+  - group: dfc-shared-prd
+  - group: dfc-app-shared-all
+  - group: dfc-app-shared-prd
+  - template: VariableTemplates\PrdEnvironmentVariables.yml
+
+  jobs:
+  - template: JobTemplates/deploy-environment.yml
+    parameters:
+      AzureSubscription: 'SFA-DIG-Prod (6c93f7dc-6c36-4ea6-8de3-3f4574f88027)'
+      EnvironmentTag: '$(EnvironmentTag)'
+      ParentBusiness: '$(ParentBusiness)'
+      ServiceOffering: '$(ServiceOffering)'
+      ResourceGroup: $(ResourceGroup)
+      DfCDevopsPath: '$(Agent.BuildDirectory)/s/dfc-devops'
+      PackageFile:  "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.DeploymentPackages/${{ variables.SolutionBaseName }}.zip"
+      ArmTemplateFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Resources.ArmTemplates/"
+      EnvironmentName: Prd_AppLmiDeltaReport
+      AppSharedResourceGroup: $(AppSharedResourceGroup)
+      AppServiceName: '$(AppServiceName)'
