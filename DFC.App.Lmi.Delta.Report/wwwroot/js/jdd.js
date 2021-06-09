@@ -1,4 +1,6 @@
-// https://www.jqueryscript.net/text/json-diff.html
+// based on https://www.jqueryscript.net/text/json-diff.html
+// but changed substantially to fix bugs and improve coloured rendering of differences
+//----------------------------------------------------------------------------------------
 
 (function ($) {
     $.fn.jdd = function(blockLeftId, blockRightId) {
@@ -18,7 +20,7 @@
         config2.currentPath = [];
 
         diffVal(left, config, right, config2);
-        diffColor(diffs, blockLeftId, blockRightId);
+        diffColor( blockLeftId, blockRightId);
         console.log(diffs);
     };
     let LEFT = 'left';
@@ -27,7 +29,6 @@
     let TYPE = 'type';
     let MISSING = 'missing';
     let diffs = [];
-    let requestCount = 0;
 
     function createConfig() {
         return {
@@ -37,7 +38,7 @@
             paths: [],
             line: 1
         };
-    };
+    }
 
     function formatAndDecorate(config, data) {
         if (getType(data) === 'array') {
@@ -60,7 +61,7 @@
         });
         finishObject(config);
         config.currentPath.pop();
-    };
+    }
 
     function getSortedProperties(obj) {
         let props = [];
@@ -73,7 +74,7 @@
             return a.localeCompare(b);
         });
         return props;
-    };
+    }
 
     function startObject(config) {
         config.indent++;
@@ -87,7 +88,7 @@
         if (config.indent === 0) {
             config.indent++;
         }
-    };
+    }
 
     function finishObject(config) {
         if (config.indent === 0) {
@@ -103,20 +104,21 @@
         } else {
             config.out += newLine(config);
         }
-    };
+    }
 
     function newLine(config) {
         config.line++;
         return '\n';
-    };
+    }
 
     function getTabs(indent) {
         let s = '';
         for (let i = 0; i < indent; i++) {
-            s += '    ';
+        //    s += '    ';
+            s += '\t';
         }
         return s;
-    };
+    }
 
     function unescapeString(val) {
         if (val) {
@@ -130,7 +132,7 @@
         } else {
             return val;
         }
-    };
+    }
 
     function generatePath(config, prop) {
         let s = '';
@@ -147,7 +149,7 @@
         } else {
             return s;
         }
-    };
+    }
 
     function formatVal(val, config) {
         if (getType(val) === 'array') {
@@ -180,7 +182,7 @@
         } else if (getType(val) === 'null') {
             config.out += 'null,';
         }
-    };
+    }
 
     function getType(value) {
         if ((function() {
@@ -189,13 +191,13 @@
             return typeof value;
         }
         return ({}).toString.call(value).match(/\s([a-z|A-Z]+)/)[1].toLowerCase();
-    };
+    }
 
     function removeTrailingComma(config) {
         if (config.out.charAt(config.out.length - 1) === ',') {
             config.out = config.out.substring(0, config.out.length - 1);
         }
-    };
+    }
 
     function diffVal(val1, config1, val2, config2) {
 
@@ -236,7 +238,7 @@
                 config2, generatePath(config2),
                 'Both types should be nulls', TYPE));
         }
-    };
+    }
 
     function diffArray(val1, config1, val2, config2) {
         if (getType(val2) !== 'array') {
@@ -313,7 +315,7 @@
                 }
             }
         }
-    };
+    }
 
     function generateDiff(config1, path1, config2, path2, msg, type) {
         if (path1 !== '/' && path1.charAt(path1.length - 1) === '/') {
@@ -341,7 +343,7 @@
             type: type,
             msg: msg
         };
-    };
+    }
 
     function diffBool (val1, config1, val2, config2) {
         if (getType(val2) !== 'boolean') {
@@ -359,40 +361,41 @@
                     'The left side is <code>false</code> and the right side is <code>true</code>', EQUALITY));
             }
         }
-    };
-
-    function forEach(array, callback, scope) {
-        for (let idx = 0; idx < array.length; idx++) {
-            callback.call(scope, array[idx], idx, array);
-        }
     }
 
-    function diffColor(diffs, blockLeftId, blockRightId) {
-        for (i = 0; i < diffs.length; i++) {
-            let linesLeft = $(`#${blockLeftId}`).text().split('\n');
-            let textLeft = $(`#${blockLeftId}`).text();
-            for (let j = 0; j < linesLeft.length; j++) {
-                if (diffs[i]['path1']['line'] == j + 1 && diffs[i]['type'] == 'eq' || diffs[i]['type'] == 'type') {
-                    $(`#${blockLeftId}`).text(textLeft.replace(linesLeft[j], `<span class="updatedElement">${linesLeft[j]}</span>`));
-                } else if (diffs[i]['path1']['line'] == j + 1 && diffs[i]['type'] == 'right') {
-                    $(`#${blockLeftId}`).text(textLeft.replace(linesLeft[j], `<span class="removedElement">${linesLeft[j]}</span>`));
+    function diffColor(blockLeftId, blockRightId) {
+        let linesLeft = $(`#${blockLeftId}`).text().split('\n');
+        let linesRight = $(`#${blockRightId}`).text().split('\n');
+
+        diffs.forEach(function (diff) {
+            if (diff['path1']['line'] <= linesLeft.length) {
+                let path1Line = diff['path1']['line'] - 1;
+                if (diff[TYPE] == EQUALITY || diff[TYPE] == TYPE) {
+                    linesLeft[path1Line] = `<span class="updatedElement">${linesLeft[path1Line]}</span>`;
+                } else if (diff[TYPE] == RIGHT) {
+                    linesLeft[path1Line] = `<span class="additionalElement">${linesLeft[path1Line]}</span>`;
+                } else if (diff[TYPE] == LEFT) {
+                    linesLeft[path1Line] = `<span class="removedElement">${linesLeft[path1Line]}</span>`;
                 }
             }
 
-            let linesRight = $(`#${blockRightId}`).text().split('\n');
-            let textRight = $(`#${blockRightId}`).text();
-            for (let j = 0; j < linesRight.length; j++) {
-                if (diffs[i]['path2']['line'] == j + 1 && diffs[i]['type'] == 'eq') {
-                    $(`#${blockRightId}`).text(textRight.replace(linesRight[j], `<span class="updatedElement">${linesRight[j]}</span>`));
+            if (diff['path2']['line'] <= linesRight.length) {
+                let path2Line = diff['path2']['line'] - 1;
+                if (diff[TYPE] == EQUALITY || diff[TYPE] == TYPE) {
+                    linesRight[path2Line] = `<span class="updatedElement">${linesRight[path2Line]}</span>`;
+                } else if (diff[TYPE] == RIGHT) {
+                    linesRight[path2Line] = `<span class="removedElement">${linesRight[path2Line]}</span>`;
+                } else if (diff[TYPE] == LEFT) {
+                    linesRight[path2Line] = `<span class="additionalElement">${linesRight[path2Line]}</span>`;
                 }
-                else if (diffs[i]['path2']['line'] == j + 1 && diffs[i]['type'] == 'left') {
-                    $(`#${blockRightId}`).text(textRight.replace(linesRight[j], `<span class="newElement">${linesRight[j]}</span>`));
-                } 
             }
-        }
+        });
+
+        $(`#${blockLeftId}`).text(linesLeft.join("\n"));
+        $(`#${blockRightId}`).text(linesRight.join("\n"));
         $(`#${blockLeftId}`).html($(`#${blockLeftId}`).text());
         $(`#${blockRightId}`).html($(`#${blockRightId}`).text());
-    };
+    }
 
     function formatAndDecorateArray(config, data) {
         startArray(config);
@@ -408,7 +411,7 @@
         });
         finishArray(config);
         config.currentPath.pop();
-    };
+    }
 
     function startArray(config) {
         config.indent++;
@@ -422,7 +425,7 @@
         if (config.indent === 0) {
             config.indent++;
         }
-    };
+    }
 
     function finishArray(config) {
         if (config.indent === 0) {
@@ -436,5 +439,5 @@
         } else {
             config.out += newLine(config);
         }
-    };
+    }
 })(jQuery);

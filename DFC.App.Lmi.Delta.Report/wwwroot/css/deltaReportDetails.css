@@ -4,19 +4,22 @@
     width: 100%;
     height: 600px;
     scroll-behavior: auto;
+    tab-size: 2;
 }
 
-span.newElement {
-    background-color: greenyellow;
-    color: black;
+span.element {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+span.additionalElement {
+    background-color: palegreen;
 }
 
 span.updatedElement {
-    background-color: lightskyblue;
-    color: black;
+    background-color: lightblue;
 }
 
 span.removedElement {
     background-color: lightpink;
-    color: black;
 }

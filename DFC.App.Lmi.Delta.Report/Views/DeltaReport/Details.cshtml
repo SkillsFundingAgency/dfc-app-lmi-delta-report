@@ -17,7 +17,15 @@
 <div>
     <h1>SOC: @Model.Soc - @Model.SocTitle</h1>
     <h2>State: @Model.State.ToString()</h2>
-    <h4><span class="newElement">New elements</span><span class="updatedElement">Updated elements</span><span class="removedElement">Removed elements</span></h4>
+
+    @if (showPublished && showDraft)
+    {
+        <h4 id="colourKeys">
+            <span class="element additionalElement">Additional elements</span>
+            <span class="element updatedElement">Updated elements</span>
+            <span class="element removedElement">Removed elements</span>
+        </h4>
+    }
 
     <table class="table table-bordered">
         <thead>
@@ -57,13 +65,10 @@
         var showDraft = @showDraft.ToString().ToLowerInvariant();
 
         if (showPublished) {
-            var publishedText = JSON.stringify(@Html.Raw(Model.PublishedJobGroup ?? ""), null, 2);
-            $('#tdPublished').text(publishedText);
+            $('#tdPublished').text(JSON.stringify(@Html.Raw(Model.PublishedJobGroup ?? ""), null, '\t'));
         }
         if (showDraft) {
-            var draftText = JSON.stringify(@Html.Raw(Model.DraftJobGroup ?? ""), null, 2);
-            $('#tdDraft').text(draftText);
-
+            $('#tdDraft').text(JSON.stringify(@Html.Raw(Model.DraftJobGroup ?? ""), null, '\t'));
         }
 
         if (showPublished && showDraft) {
