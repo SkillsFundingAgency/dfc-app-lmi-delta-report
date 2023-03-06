@@ -78,7 +78,7 @@ stages:
 
 - stage: DeployToDev
   dependsOn: Build
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/dev'))
+  condition: succeeded()
   displayName: Deploy to Dev
   variables:
   - group: dfc-shared-all
