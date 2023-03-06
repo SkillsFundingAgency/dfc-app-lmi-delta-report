@@ -72,7 +72,7 @@ stages:
       DfCDevopsPath: '$(Agent.BuildDirectory)/s/dfc-devops'
       PackageFile:  "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.DeploymentPackages/${{ variables.SolutionBaseName }}.zip"
       ArmTemplateFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Resources.ArmTemplates/"
-      EnvironmentName: Lab_AppLmiDeltaReport
+      EnvironmentName: Lab-AppLmiDeltaReport
       AppSharedResourceGroup: $(AppSharedResourceGroup)
       AppServiceName: '$(AppServiceName)'
 
