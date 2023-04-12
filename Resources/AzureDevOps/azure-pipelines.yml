@@ -10,7 +10,7 @@ resources:
   - repository: dfc-devops
     type: github
     name: SkillsFundingAgency/dfc-devops
-    ref: refs/tags/v1.11.2
+    ref: dotnetUpgrade
     endpoint: 'GitHub (ESFA)'
 
 pool:
@@ -48,7 +48,6 @@ stages:
         SolutionBaseName: $(SolutionBaseName)
         BuildPlatform: $(BuildPlatform)
         BuildConfiguration: $(BuildConfiguration)
-        DotNetCoreVersion: '3.1.100'
         PublishWebApp: true
         TestSuffix: UnitTests
 
@@ -73,13 +72,13 @@ stages:
       DfCDevopsPath: '$(Agent.BuildDirectory)/s/dfc-devops'
       PackageFile:  "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.DeploymentPackages/${{ variables.SolutionBaseName }}.zip"
       ArmTemplateFolder: "$(Pipeline.Workspace)/${{ variables.SolutionBaseName }}.Resources.ArmTemplates/"
-      EnvironmentName: Lab_AppLmiDeltaReport
+      EnvironmentName: Lab-AppLmiDeltaReport
       AppSharedResourceGroup: $(AppSharedResourceGroup)
       AppServiceName: '$(AppServiceName)'
 
 - stage: DeployToDev
   dependsOn: Build
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/dev'))
+  condition: succeeded()
   displayName: Deploy to Dev
   variables:
   - group: dfc-shared-all
@@ -129,7 +128,7 @@ stages:
       AppServiceName: '$(AppServiceName)'
 
 - stage: DeployToPP
-  condition: and(eq(dependencies.Build.result,'Succeeded'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  condition: succeeded()
   displayName: Deploy to PP
   variables:
   - group: dfc-shared-all
@@ -154,7 +153,7 @@ stages:
       AppServiceName: '$(AppServiceName)'
 
 - stage: DeployToPrd
-  condition: and(eq(dependencies.DeployToPP.result,'Succeeded'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  condition: succeeded()
   displayName: Deploy to Prd
   variables:
   - group: dfc-shared-all
