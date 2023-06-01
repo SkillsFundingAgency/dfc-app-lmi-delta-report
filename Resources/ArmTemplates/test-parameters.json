@@ -20,11 +20,11 @@
         "Environment": {
             "value": "FOO"
         },
-        "enableAlerts": {
-            "value": false
-        },
         "DeltaReportApiClientOptionsBaseAddress": {
             "value": "DeltaReportApiClientOptionsBaseAddress"
+        },
+        "appInsightsInstrumentationKey": {
+            "value": "appinsightsinstrumentationkey"
         }
     }
 }
