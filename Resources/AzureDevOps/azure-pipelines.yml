@@ -52,7 +52,7 @@ stages:
         TestSuffix: UnitTests
 
 - stage: DeployToLab
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/dev'))
+  condition: succeeded()
   displayName: Deploy to Lab
   variables:
   - group: dfc-shared-all
