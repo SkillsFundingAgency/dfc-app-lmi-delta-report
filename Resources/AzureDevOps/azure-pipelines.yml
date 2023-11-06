@@ -3,6 +3,7 @@ variables:
   BuildPlatform: 'any cpu'
   BuildConfiguration: 'release'
   ArmTemplateRoot: '$(Build.SourcesDirectory)\Resources\ArmTemplates'
+  ShouldRunSonarCloud: false
 
 resources:
   repositories:
@@ -30,10 +31,6 @@ pr:
     include: 
     - dev
     - master
-
-
-variables:
-  ShouldRunSonarCloud: false
 
 stages:
 - stage: Build
