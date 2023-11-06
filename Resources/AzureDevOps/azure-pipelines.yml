@@ -31,6 +31,10 @@ pr:
     - dev
     - master
 
+
+variables:
+  ShouldRunSonarCloud: false
+
 stages:
 - stage: Build
   jobs:
