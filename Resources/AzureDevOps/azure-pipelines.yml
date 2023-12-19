@@ -43,7 +43,7 @@ stages:
         ArmTemplateRoot: '${{ variables.ArmTemplateRoot }}'
         SolutionBaseName: '${{ variables.SolutionBaseName }}'
 
-    - template: AzureDevOpsTemplates\Build\StepTemplates\dfc-dotnetcore-build-sonar.yml@dfc-devops
+    - template: AzureDevOpsTemplates\Build\StepTemplates\dfc-dotnetcore-build.yml@dfc-devops
       parameters:
         SolutionBaseName: $(SolutionBaseName)
         BuildPlatform: $(BuildPlatform)
@@ -52,7 +52,7 @@ stages:
         TestSuffix: UnitTests
 
 - stage: DeployToLab
-  condition: succeeded()
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
   displayName: Deploy to Lab
   variables:
   - group: dfc-shared-all
@@ -78,7 +78,7 @@ stages:
 
 - stage: DeployToDev
   dependsOn: Build
-  condition: succeeded()
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
   displayName: Deploy to Dev
   variables:
   - group: dfc-shared-all
@@ -103,7 +103,7 @@ stages:
       AppServiceName: '$(AppServiceName)'
 
 - stage: DeployToSit
-  condition: succeeded()
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
   displayName: Deploy to Sit
   variables:
   - group: dfc-shared-all
@@ -128,7 +128,7 @@ stages:
       AppServiceName: '$(AppServiceName)'
 
 - stage: DeployToPP
-  condition: succeeded()
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
   displayName: Deploy to PP
   variables:
   - group: dfc-shared-all
@@ -153,7 +153,7 @@ stages:
       AppServiceName: '$(AppServiceName)'
 
 - stage: DeployToPrd
-  condition: succeeded()
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
   displayName: Deploy to Prd
   variables:
   - group: dfc-shared-all

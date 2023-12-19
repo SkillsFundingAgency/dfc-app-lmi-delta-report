@@ -25,6 +25,12 @@
         },
         "DeltaReportApiClientOptionsBaseAddress": {
             "value": "DeltaReportApiClientOptionsBaseAddress"
+        },
+        "workspaceName": {
+            "value": "aTestLogAnalyticsAccount"
+        },
+        "workspaceResourceGroup": {
+            "value": "aResourceGroup"
         }
     }
 }
