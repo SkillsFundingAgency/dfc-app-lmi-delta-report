@@ -36,6 +36,12 @@
     },
     "DeltaReportApiClientOptionsBaseAddress": {
       "type": "string"
+    },
+    "workspaceName": {
+      "type": "string"
+    },
+    "workspaceResourceGroup": {
+      "type": "string"
     }
   },
   "variables": {
@@ -160,6 +166,12 @@
           },
           "attachedService": {
             "value": ""
+          },
+          "workspaceName": {
+              "value": "[parameters('workspaceName')]"
+          },
+          "workspaceResourceGroup": {
+              "value": "[parameters('workspaceResourceGroup')]"
           }
         }
       }
