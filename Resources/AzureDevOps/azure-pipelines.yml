@@ -52,7 +52,7 @@ stages:
         TestSuffix: UnitTests
 
 - stage: DeployToLab
-  condition: succeeded()
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
   displayName: Deploy to Lab
   variables:
   - group: dfc-shared-all
