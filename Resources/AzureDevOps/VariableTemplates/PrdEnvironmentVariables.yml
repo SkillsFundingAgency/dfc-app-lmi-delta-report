@@ -9,11 +9,5 @@ variables:
     value: $(resourcePrefix)-rg
   - name: EnableAzureMonitorAlerting
     value: true
-  - name: aspTier
-    value: Standard
-  - name: aspInstances
-    value: 2
-  - name: aspSize
-    value: 2
   - name: DeltaReportApiClientOptionsBaseAddress
     value: https://dfc-prd-api-lmi-delta-report-fa.$(appServiceDomain)/delta-reports/
