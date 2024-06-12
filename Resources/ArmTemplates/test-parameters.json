@@ -5,14 +5,11 @@
         "appSharedResourceGroup": {
             "value": "dfc-dev-app-sharedresources-rg"
         },
-        "aspInstances": {
-            "value": 2
+        "appServiceName": {
+            "value": "dfc-pp-app-lmi-delta-report-as-ver"
         },
-        "aspTier": {
-            "value": "Standard"
-        },
-        "aspSize": {
-            "value": "2"
+        "appServicePlanSuffix": {
+            "value": "-migrated"
         },
         "appSharedStorageAccountName": {
             "value": "dfcdevappsharedstr"

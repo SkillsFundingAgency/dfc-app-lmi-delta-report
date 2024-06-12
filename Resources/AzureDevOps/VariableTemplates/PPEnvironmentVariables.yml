@@ -4,16 +4,12 @@ variables:
   - name: resourcePrefix
     value: dfc-pp-app-lmi-delta-report
   - name: appServiceName
-    value: $(resourcePrefix)-as
+    value: $(resourcePrefix)-as-ver2
+  - name: appServicePlanSuffix
+    value: -migrated
   - name: ResourceGroup
     value: $(resourcePrefix)-rg
   - name: EnableAzureMonitorAlerting
     value: true
-  - name: aspTier
-    value: Standard
-  - name: aspInstances
-    value: 2
-  - name: aspSize
-    value: 2
   - name: DeltaReportApiClientOptionsBaseAddress
-    value: https://dfc-pp-api-lmi-delta-report-fa.$(appServiceDomain)/delta-reports/
+    value: https://dfc-pp-api-lmi-delta-report-fa-ver2.$(appServiceDomain)/delta-reports/

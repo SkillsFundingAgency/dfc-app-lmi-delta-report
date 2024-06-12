@@ -5,20 +5,11 @@
         "appSharedResourceGroup": {
             "value": "__appSharedResourceGroup__"
         },
-        "aseHostingEnvironmentName": {
-            "value": "__aseServiceName__"
+        "appServiceName": {
+            "value": "__AppServiceName__"
         },
-        "aseResourceGroup": {
-            "value": "__aseResourceGroup__"
-        },
-        "aspInstances": {
-            "value": __aspInstances__
-        },
-        "aspTier": {
-            "value": "__aspTier__"
-        },
-        "aspSize": {
-            "value": "__aspSize__"
+        "appServicePlanSuffix": {
+            "value": "__AppServicePlanSuffix__"
         },
         "appSharedStorageAccountName": {
             "value": "__appSharedStorageAccountName__"
