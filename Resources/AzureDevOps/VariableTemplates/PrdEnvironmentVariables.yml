@@ -4,10 +4,10 @@ variables:
   - name: resourcePrefix
     value: dfc-prd-app-lmi-delta-report
   - name: appServiceName
-    value: $(resourcePrefix)-as
+    value: $(resourcePrefix)-as-ver2
   - name: ResourceGroup
     value: $(resourcePrefix)-rg
   - name: EnableAzureMonitorAlerting
     value: true
   - name: DeltaReportApiClientOptionsBaseAddress
-    value: https://dfc-prd-api-lmi-delta-report-fa.$(appServiceDomain)/delta-reports/
+    value: https://dfc-prd-api-lmi-delta-report-fa-ver2.$(appServiceDomain)/delta-reports/
